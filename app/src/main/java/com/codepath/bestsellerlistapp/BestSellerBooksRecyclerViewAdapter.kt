@@ -1,10 +1,13 @@
 package com.codepath.bestsellerlistapp
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.codepath.bestsellerlistapp.R.id
 
 /**
@@ -12,9 +15,10 @@ import com.codepath.bestsellerlistapp.R.id
  * specified [OnListFragmentInteractionListener].
  */
 class BestSellerBooksRecyclerViewAdapter(
+    val context: Context,
     private val books: List<BestSellerBook>,
     private val mListener: OnListFragmentInteractionListener?
-    )
+)
     : RecyclerView.Adapter<BestSellerBooksRecyclerViewAdapter.BookViewHolder>()
     {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
@@ -31,6 +35,7 @@ class BestSellerBooksRecyclerViewAdapter(
         var mItem: BestSellerBook? = null
         val mBookTitle: TextView = mView.findViewById<View>(id.book_title) as TextView
         val mBookAuthor: TextView = mView.findViewById<View>(id.book_author) as TextView
+        val book_image = mView.findViewById<ImageView>(id.book_image)
 
         override fun toString(): String {
             return mBookTitle.toString() + " '" + mBookAuthor.text + "'"
@@ -40,10 +45,16 @@ class BestSellerBooksRecyclerViewAdapter(
     /**
      * This lets us "bind" each Views in the ViewHolder to its' actual data!
      */
-    override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BookViewHolder, position: Int)   {
         val book = books[position]
 
         holder.mItem = book
+        Glide
+            .with(context)
+            .load(book.bookImageUrl)
+            .fitCenter()
+            .into(holder.book_image);
+
         holder.mBookTitle.text = book.title
         holder.mBookAuthor.text = book.author
 
